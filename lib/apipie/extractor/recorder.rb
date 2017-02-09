@@ -146,7 +146,10 @@ module Apipie
 
       module FunctionalTestRecording
         def self.included(base)
-          base.alias_method_chain :process, :api_recording
+          base.class_eval do
+            alias_method :process_without_api_recording, :process
+            alias_method :process, :process_with_api_recording
+          end
         end
 
         def process_with_api_recording(*args) # action, parameters = nil, session = nil, flash = nil, http_method = 'GET')

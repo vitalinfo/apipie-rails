@@ -90,7 +90,7 @@ significant features deserves new minor version bump.
   [#318](https://github.com/Apipie/apipie-rails/pull/318) [@burnettk][]
 * load API paths from routes.rb
   [#187](https://github.com/Apipie/apipie-rails/pull/187) [@mtparet][] [@iNecas][]
-* ability to use before_filter instead of overriding the action method
+* ability to use before_action instead of overriding the action method
   for validation
   [#306](https://github.com/Apipie/apipie-rails/pull/306) [@dprice-fiksu][]
 * support multi-part data when recording from tests
