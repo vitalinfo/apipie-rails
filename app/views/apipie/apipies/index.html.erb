@@ -12,7 +12,7 @@
 
 <h1 class='page-header'><%= t('apipie.resources') %></h1>
 
-<% @doc[:resources].sort_by(&:first).each do |key, api| %>
+<% @doc[:resources].sort_by{|key, value| value[:name] || key}.each do |key, api| %>
   <h2>
     <a href='<%= api[:doc_url] %><%= @doc[:link_extension] %>'>
       <%= api[:name] %>
