@@ -70,7 +70,7 @@
         <% unless method[:examples].blank? %>
           <h2><%= t('apipie.examples') %></h2>
           <% method[:examples].each do |example| %>
-            <pre><%= example %></pre>
+            <pre><%= example.html_safe %></pre>
           <% end %>
         <% end %>
 

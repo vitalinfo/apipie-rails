@@ -18,7 +18,7 @@
 <% unless method[:examples].blank? %>
   <%= heading(t('apipie.examples'), h_level) %>
   <% method[:examples].each do |example| %>
-    <pre class="prettyprint"><%= example %></pre>
+    <pre class="prettyprint"><%= example.html_safe %></pre>
   <% end %>
 <% end %>
 
