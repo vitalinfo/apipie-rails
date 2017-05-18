@@ -145,15 +145,8 @@ module Apipie
       end
 
       module FunctionalTestRecording
-        def self.included(base)
-          base.class_eval do
-            alias_method :process_without_api_recording, :process
-            alias_method :process, :process_with_api_recording
-          end
-        end
-
-        def process_with_api_recording(*args) # action, parameters = nil, session = nil, flash = nil, http_method = 'GET')
-          ret = process_without_api_recording(*args)
+        def process(*args) # action, parameters = nil, session = nil, flash = nil, http_method = 'GET')
+          ret = super(*args)
           if Apipie.configuration.record
             Apipie::Extractor.call_recorder.analyze_functional_test(self)
             Apipie::Extractor.call_finished

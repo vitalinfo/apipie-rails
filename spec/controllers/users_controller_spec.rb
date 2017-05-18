@@ -66,12 +66,12 @@ describe UsersController do
       end
 
       it "should reply to valid request" do
-        get :show, :id => '5', :session => "secret_hash"
+        get :show, :params => { :id => '5', :session => "secret_hash" }
         assert_response :success
       end
 
       it "should pass if required parameter is missing" do
-        expect { get :show, :id => 5 }.not_to raise_error
+        expect { get :show, :params => { :id => 5 } }.not_to raise_error
       end
 
     end
@@ -92,17 +92,17 @@ describe UsersController do
           end
 
           it "should reply to valid request" do
-            expect { get :show, :id => 5, :session => "secret_hash" }.not_to raise_error
+            expect { get :show, :params => { :id => 5, :session => "secret_hash" }}.not_to raise_error
             assert_response :success
           end
 
           it "should fail if required parameter is missing" do
-            expect { get :show, :id => 5 }.to raise_error(Apipie::ParamMissing, /session_parameter_is_required/)
+            expect { get :show, :params => { :id => 5 }}.to raise_error(Apipie::ParamMissing, /session_parameter_is_required/)
           end
 
           it "should pass if required parameter has wrong type" do
-            expect { get :show, :id => 5, :session => "secret_hash" }.not_to raise_error
-            expect { get :show, :id => "ten", :session => "secret_hash" }.not_to raise_error
+            expect { get :show, :params => { :id => 5 , :session => "secret_hash" }}.not_to raise_error
+            expect { get :show, :params => { :id => "ten" , :session => "secret_hash" }}.not_to raise_error
           end
 
         end
@@ -115,12 +115,12 @@ describe UsersController do
           end
 
           it "should reply to valid request" do
-            expect { get :show, :id => 5, :session => "secret_hash" }.not_to raise_error
+            expect { get :show, :params => { :id => 5, :session => 'secret_hash' }}.not_to raise_error
             assert_response :success
           end
 
           it "should fail if extra parameter is passed in" do
-            expect { get :show, :id => 5, :session => "secret_hash", :badparam => 'badfoo' }.to raise_error(Apipie::UnknownParam, /\bbadparam\b/)
+            expect { get :show, :params => { :id => 5 , :badparam => 'badfoo', :session => "secret_hash" }}.to raise_error(Apipie::UnknownParam, /\bbadparam\b/)
           end
         end
 
@@ -132,86 +132,80 @@ describe UsersController do
           end
 
           it "should reply to valid request" do
-            get :show, :id => '5', :session => "secret_hash"
+            get :show, :params => { :id => '5', :session => "secret_hash" }
             assert_response :success
           end
 
           it "should work with nil value for a required hash param" do
             expect {
-              get :show, :id => '5', :session => "secret_hash", :hash_param => {:dummy_hash => nil}
+              get :show, :params => { :id => '5', :session => "secret_hash", :hash_param => {:dummy_hash => nil} }
             }.to raise_error(Apipie::ParamInvalid, /dummy_hash/)
             assert_response :success
           end
 
           it "should fail if required parameter is missing" do
-            expect { get :show, :id => 5 }.to raise_error(Apipie::ParamMissing, /session_parameter_is_required/)
+            expect { get :show, :params => { :id => 5 }}.to raise_error(Apipie::ParamMissing, /session_parameter_is_required/)
           end
 
           it "should work with custom Type validator" do
             expect {
               get :show,
-                  :id => "not a number",
-                  :session => "secret_hash"
+                  :params => { :id => "not a number", :session => "secret_hash" }
             }.to raise_error(Apipie::ParamError, /id/) # old-style error rather than ParamInvalid
           end
 
           it "should work with Regexp validator" do
-            get :show,
-                :id => 5,
-                :session => "secret_hash",
-                :regexp_param => "24 years"
+            get :show, :params => { :id => 5, :session => "secret_hash", :regexp_param => "24 years" }
             assert_response :success
 
             expect {
-              get :show,
-                  :id => 5,
-                  :session => "secret_hash",
-                  :regexp_param => "ten years"
+              get :show, :params => { :id => 5,
+                                      :session => "secret_hash",
+                                      :regexp_param => "ten years" }
             }.to raise_error(Apipie::ParamInvalid, /regexp_param/)
           end
 
           it "should work with Array validator" do
-            get :show, :id => 5, :session => "secret_hash", :array_param => "one"
+            get :show, :params => { :id => 5, :session => "secret_hash", :array_param => "one" }
             assert_response :success
-            get :show, :id => 5, :session => "secret_hash", :array_param => "two"
+            get :show, :params => { :id => 5, :session => "secret_hash", :array_param => "two" }
             assert_response :success
-            get :show, :id => 5, :session => "secret_hash", :array_param => '1'
-            assert_response :success
-            get :show, :id => 5, :session => "secret_hash", :boolean_param => false
+            get :show, :params => { :id => 5, :session => "secret_hash", :array_param => '1' }
             assert_response :success
 
             expect {
-              get :show,
-                  :id => 5,
-                  :session => "secret_hash",
-                  :array_param => "blabla"
+              get :show, :params => { :id => 5,
+                                      :session => "secret_hash",
+                                      :array_param => "blabla" }
             }.to raise_error(Apipie::ParamInvalid, /array_param/)
 
             expect {
-              get :show,
-                  :id => 5,
-                  :session => "secret_hash",
-                  :array_param => 3
+              get :show, :params => {
+                :id => 5,
+                :session => "secret_hash",
+                :array_param => 3 }
             }.to raise_error(Apipie::ParamInvalid, /array_param/)
           end
 
           it "should work with Proc validator" do
             expect {
               get :show,
-                  :id => 5,
-                  :session => "secret_hash",
-                  :proc_param => "asdgsag"
+                  :params => {
+                    :id => 5,
+                    :session => "secret_hash",
+                    :proc_param => "asdgsag" }
             }.to raise_error(Apipie::ParamInvalid, /proc_param/)
 
             get :show,
-                :id => 5,
-                :session => "secret_hash",
-                :proc_param => "param value"
+                :params => {
+                  :id => 5,
+                  :session => "secret_hash",
+                  :proc_param => "param value"}
             assert_response :success
           end
 
           it "should work with Hash validator" do
-            post :create, :user => { :name => "root", :pass => "12345", :membership => "standard" }
+            post :create, params: { :user => { :name => "root", :pass => "12345", :membership => "standard" } }
             assert_response :success
 
             a = Apipie[UsersController, :create]
@@ -225,18 +219,18 @@ describe UsersController do
             hash_params[2].name == :membership
 
             expect {
-              post :create, :user => { :name => "root", :pass => "12345", :membership => "____" }
+              post :create, :params => { :user => { :name => "root", :pass => "12345", :membership => "____" } }
             }.to raise_error(Apipie::ParamInvalid, /membership/)
 
             expect {
-              post :create, :user => { :name => "root" }
+              post :create, :params => { :user => { :name => "root" } }
             }.to raise_error(Apipie::ParamMissing, /pass/)
 
             expect {
-              post :create, :user => "a string is not a hash"
+              post :create, :params => { :user => "a string is not a hash" }
             }.to raise_error(Apipie::ParamInvalid, /user/)
 
-            post :create, :user => { :name => "root", :pass => "pwd" }
+            post :create, :params => { :user => { :name => "root", :pass => "pwd" } }
             assert_response :success
           end
 
@@ -257,23 +251,27 @@ describe UsersController do
 
           it "should allow nil when allow_nil is set to true" do
             post :create,
-                 :user => {
-                   :name => "root",
-                   :pass => "12345",
-                   :membership => "standard",
-                 },
-                 :facts => nil
+                 :params => {
+                   :user => {
+                     :name => "root",
+                     :pass => "12345",
+                     :membership => "standard",
+                   },
+                   :facts => { :test => 'test' }
+                 }
             assert_response :success
           end
 
           it "should allow blank when allow_blank is set to true" do
             post :create,
-              :user => {
-                :name => "root",
-                :pass => "12345",
-                :membership => "standard"
-              },
-              :age => ""
+              :params => {
+                :user => {
+                  :name => "root",
+                  :pass => "12345",
+                  :membership => "standard"
+                },
+                :age => ""
+              }
             assert_response :success
           end
 
@@ -282,7 +280,7 @@ describe UsersController do
             context "with valid input" do
               it "should succeed" do
                 put :update,
-                    {
+                    :params => {
                       :id => 5,
                       :user => {
                         :name => "root",
@@ -305,27 +303,27 @@ describe UsersController do
               it "should raise an error" do
                 expect{
                   put :update,
-                    {
-                      :id => 5,
-                      :user => {
-                        :name => "root",
-                        :pass => "12345"
-                      },
-                      :comments => [
-                        {
-                          :comment => 'comment1'
+                      :params => {
+                        :id => 5,
+                        :user => {
+                          :name => "root",
+                          :pass => "12345"
                         },
-                        {
-                          :comment => {:bad_input => 5}
-                        }
-                      ]
-                    }
+                        :comments => [
+                          {
+                            :comment => {:bad_input => 4}
+                          },
+                          {
+                            :comment => {:bad_input => 5}
+                          }
+                        ]
+                      }
                 }.to raise_error(Apipie::ParamInvalid)
               end
             end
             it "should work with empty array" do
               put :update,
-                  {
+                  :params => {
                     :id => 5,
                     :user => {
                       :name => "root",
@@ -453,6 +451,14 @@ describe UsersController do
       expect(a.errors[2].description).to eq("Not Found")
     end
 
+    it 'should recognize Rack symbols as error codes' do
+      a = Apipie.get_method_description(UsersController, :create)
+
+      error = a.errors.find { |e| e.code == 422 }
+      expect(error).to be
+      expect(error.description).to include("Unprocessable Entity")
+    end
+
     it "should contain all params description" do
       a = Apipie.get_method_description(UsersController, :show)
       expect(a.params.count).to eq(12)
@@ -573,7 +579,7 @@ describe UsersController do
                           :expected_type=>"string"},
                          {:required=>true,
                           :allow_nil => false,
-                          :allow_blank => false,   
+                          :allow_blank => false,
                           :validator=>"Must be a String",
                           :description=>"\n<p>Password for login</p>\n",
                           :name=>"apassword", :full_name=>"resource_param[apassword]",
@@ -708,17 +714,20 @@ EOS2
 
   describe "Parameter processing / extraction" do
     before do
+      Apipie.configuration.validate = true
       Apipie.configuration.process_params = true
+      controllers_dirname = File.expand_path('../dummy/app/controllers', File.dirname(__FILE__))
+      Dir.glob("#{controllers_dirname}/**/*") { |file| load(file) if File.file?(file) }
     end
 
     it "process correctly the parameters" do
-      post :create, {:user => {:name => 'dummy', :pass => 'dummy', :membership => 'standard'}, :facts => nil}
+      post :create, :params => {:user => {:name => 'dummy', :pass => 'dummy', :membership => 'standard' }, :facts => {:test => 'test'}}
 
-      expect(assigns(:api_params).with_indifferent_access).to eq({:user => {:name=>"dummy", :pass=>"dummy", :membership=>"standard"}, :facts => nil}.with_indifferent_access)
+      expect(assigns(:api_params).with_indifferent_access).to eq({:user => {:name=>"dummy", :pass=>"dummy", :membership=>"standard"}, :facts => {:test => 'test'}}.with_indifferent_access)
     end
 
     it "ignore not described parameters" do
-      post :create, {:user => {:name => 'dummy', :pass => 'dummy', :membership => 'standard', :id => 0}}
+      post :create, :params => {:user => {:name => 'dummy', :pass => 'dummy', :membership => 'standard', :id => 0}}
 
       expect(assigns(:api_params).with_indifferent_access).to eq({:user => {:name=>"dummy", :pass=>"dummy", :membership=>"standard"}}.with_indifferent_access)
     end
