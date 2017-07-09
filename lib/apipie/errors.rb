@@ -27,7 +27,7 @@ module Apipie
           @param.options[:missing_message].to_s
         end
       else
-        "Missing parameter #{@param.name}"
+        "Missing parameter #{@param.full_name}"
       end
     end
   end
