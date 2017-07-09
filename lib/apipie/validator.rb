@@ -39,7 +39,7 @@ module Apipie
       end
 
       def param_name
-        @param_description.name
+        @param_description.full_name
       end
 
       # validator description
