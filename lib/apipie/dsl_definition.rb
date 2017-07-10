@@ -224,6 +224,11 @@ module Apipie
                 method_params.each do |_, param|
                   # check if required parameters are present
                   raise ParamMissing.new(param) if param.required && !params.has_key?(param.name)
+
+                  if param.required_one_from.present? &&
+                    (param.required_one_from + [param.name]).all?{ |param_name| params.has_key?(param_name).blank? }
+                    raise ParamMissing.new(param)
+                  end
                 end
               end
 
