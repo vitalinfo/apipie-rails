@@ -278,7 +278,7 @@ module Apipie
       end
 
       def _apipie_get_method_params(method)
-        @method_params[method]
+        @method_params[method] || {}
       end
 
       # Describe request header.
