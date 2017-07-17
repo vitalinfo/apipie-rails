@@ -306,7 +306,12 @@ module Apipie
         if @hash_params
           @hash_params.each do |k, p|
             if Apipie.configuration.validate_presence?
-              raise ParamMissing.new(p) if p.required && !value.has_key?(k)
+              raise ParamMissing.new(p) if p.required && value[k.to_sym].blank?
+
+              if p.required_one_from.present? &&
+                  (p.required_one_from + [k]).all?{ |param_name| value[param_name.to_sym].blank? }
+                raise ParamMissing.new(p)
+              end
             end
             if Apipie.configuration.validate_value?
               p.validate(value[k]) if value.has_key?(k)

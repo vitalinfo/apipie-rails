@@ -219,14 +219,13 @@ module Apipie
           unless instance_methods.include?(:apipie_validations)
             define_method(:apipie_validations) do
               method_params = self.class._apipie_get_method_params(action_name)
-
               if Apipie.configuration.validate_presence?
                 method_params.each do |_, param|
                   # check if required parameters are present
                   raise ParamMissing.new(param) if param.required && params[param.name.to_sym].blank?
 
                   if param.required_one_from.present? &&
-                    (param.required_one_from + [param.name]).all?{ |param_name| params.has_key?(param_name).blank? }
+                    (param.required_one_from + [param.name]).all?{ |param_name| params[param_name.to_sym].blank? }
                     raise ParamMissing.new(param)
                   end
                 end
