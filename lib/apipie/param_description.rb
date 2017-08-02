@@ -126,6 +126,7 @@ module Apipie
                :full_name => full_name,
                :description => preformat_text(Apipie.app.translate(@options[:desc], lang)),
                :required => required,
+               :required_one_from => required_one_from,
                :allow_nil => allow_nil,
                :allow_blank => allow_blank,
                :validator => validator.to_s,

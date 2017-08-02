@@ -14,6 +14,7 @@ en:
     goto_homepage_href: "%{app_name} API documentation homepage"
     required: required
     optional: optional
+    required_one_from: required one of %{params}
     nil_allowed: nil allowed
     param_name: Param name
     params: Params

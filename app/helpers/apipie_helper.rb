@@ -7,4 +7,10 @@ module ApipieHelper
     end
   end
 
+  def required(param)
+    return t('apipie.required') if param[:required]
+    return t('apipie.optional') if param[:required].blank? && param[:required_one_from].blank?
+    t('apipie.required_one_from',
+      params: "<code>#{([param[:name]] + param[:required_one_from]).join('</code>, <code>')}</code>").html_safe
+  end
 end

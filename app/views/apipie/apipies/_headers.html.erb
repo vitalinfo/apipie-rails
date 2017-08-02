@@ -13,7 +13,7 @@
           <td>
             <strong><%= header[:name] %> </strong><br>
             <small>
-              <%= header[:options][:required] ? t('apipie.required') : t('apipie.optional') %>
+              <%= required(header[:options]) %>
             </small>
           </td>
           <td>
