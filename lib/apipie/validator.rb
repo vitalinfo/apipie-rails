@@ -302,14 +302,14 @@ module Apipie
       end
 
       def validate(value)
-        return false if !value.is_a? Hash
+        return false unless value.is_a? Hash
         if @hash_params
           @hash_params.each do |k, p|
             if Apipie.configuration.validate_presence?
-              raise ParamMissing.new(p) if p.required && value[k.to_sym].blank?
+              raise ParamMissing.new(p) if p.required && blank?(value[k.to_sym])
 
               if p.required_one_from.present? &&
-                  (p.required_one_from + [k]).all?{ |param_name| value[param_name.to_sym].blank? }
+                 (p.required_one_from + [k]).all? { |param_name| blank?(value[param_name.to_sym]) }
                 raise ParamMissing.new(p)
               end
             end
@@ -358,6 +358,12 @@ module Apipie
         @hash_params = params_ordered.reduce({}) do |h, param|
           h.update(param.name.to_sym => param)
         end
+      end
+
+      private
+
+      def blank?(value)
+        value.blank? && value != false
       end
     end
 
