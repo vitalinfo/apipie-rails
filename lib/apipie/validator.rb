@@ -306,10 +306,10 @@ module Apipie
         if @hash_params
           @hash_params.each do |k, p|
             if Apipie.configuration.validate_presence?
-              raise ParamMissing.new(p) if p.required && blank?(value[k.to_sym])
+              raise ParamMissing.new(p) if p.required && Apipie::ParamBlank.new(value[k.to_sym]).blank?
 
               if p.required_one_from.present? &&
-                 (p.required_one_from + [k]).all? { |param_name| blank?(value[param_name.to_sym]) }
+                 (p.required_one_from + [k]).all? { |param_name| Apipie::ParamBlank.new(value[param_name.to_sym]).blank? }
                 raise ParamMissing.new(p)
               end
             end
@@ -358,12 +358,6 @@ module Apipie
         @hash_params = params_ordered.reduce({}) do |h, param|
           h.update(param.name.to_sym => param)
         end
-      end
-
-      private
-
-      def blank?(value)
-        value.blank? && value != false
       end
     end
 

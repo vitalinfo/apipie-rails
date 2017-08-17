@@ -222,10 +222,10 @@ module Apipie
               if Apipie.configuration.validate_presence?
                 method_params.each do |_, param|
                   # check if required parameters are present
-                  raise ParamMissing.new(param) if param.required && params[param.name.to_sym].blank?
+                  raise ParamMissing.new(param) if param.required && Apipie::ParamBlank.new(params[param.name.to_sym]).blank?
 
                   if param.required_one_from.present? &&
-                    (param.required_one_from + [param.name]).all?{ |param_name| params[param_name.to_sym].blank? }
+                    (param.required_one_from + [param.name]).all?{ |param_name| Apipie::ParamBlank.new(params[param_name.to_sym]).blank? }
                     raise ParamMissing.new(param)
                   end
                 end
