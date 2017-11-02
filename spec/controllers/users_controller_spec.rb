@@ -241,6 +241,7 @@ describe UsersController do
                                   :validator => "Must be a Hash",
                                   :description => "\n<p>Additional optional facts about the user</p>\n",
                                   :required => false,
+                                  :required_one_from => nil,
                                   :allow_nil => true,
                                   :allow_blank => false,
                                   :metadata => nil,
